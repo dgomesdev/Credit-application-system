@@ -1,5 +1,6 @@
 package com.dgomesdev.creditapplicationsystem.service.impl
 
+import com.dgomesdev.creditapplicationsystem.dto.CreditDto
 import com.dgomesdev.creditapplicationsystem.model.Credit
 import com.dgomesdev.creditapplicationsystem.repository.CreditRepository
 import com.dgomesdev.creditapplicationsystem.service.CreditService
@@ -12,11 +13,10 @@ class CreditServiceImpl(
     private val creditRepository: CreditRepository,
     private val customerService: CustomerService
 ): CreditService {
-    override fun saveCredit(credit: Credit) {
-        val savedCredit = credit.copy(
-            customer = customerService.findCustomerById(credit.customer?.id!!)
-        )
-        creditRepository.save(savedCredit)
+    override fun saveCredit(creditDto: CreditDto) {
+        val customer = customerService.findCustomerById(creditDto.customerId)
+        val credit = creditDto.toEntity().copy(customer = customer)
+        creditRepository.save(credit)
     }
 
     override fun findAllCreditsByCustomerId(customerId: Long): List<Credit> =
@@ -29,4 +29,11 @@ class CreditServiceImpl(
                 )
         return if (credit.customer?.id == customerId) credit else throw RuntimeException("Not authorized!")
     }
+
+    override fun CreditDto.toEntity(): Credit =
+        Credit(
+            creditValue = this.creditValue,
+            dayOfFirstInstallment = this.dayOfFirstInstallment,
+            numberOfInstallments = this.numberOfInstallments
+        )
 }
