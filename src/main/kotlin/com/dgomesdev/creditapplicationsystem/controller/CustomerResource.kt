@@ -1,6 +1,7 @@
 package com.dgomesdev.creditapplicationsystem.controller
 
 import com.dgomesdev.creditapplicationsystem.dto.CustomerDto
+import com.dgomesdev.creditapplicationsystem.dto.CustomerListView
 import com.dgomesdev.creditapplicationsystem.dto.CustomerUpdateDto
 import com.dgomesdev.creditapplicationsystem.dto.CustomerView
 import com.dgomesdev.creditapplicationsystem.service.CustomerService
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.util.stream.Collectors
 
 @RestController
 @RequestMapping("/api/customers")
@@ -48,6 +50,19 @@ class CustomerResource(
             ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found!")
         }
     }
+
+    @GetMapping
+    fun findAllCustomers(): ResponseEntity<List<CustomerListView>> =
+        try {
+            val customerList = customerService
+                .findAllCustomers()
+                .stream()
+                .map { customer -> CustomerListView(customer) }
+                .collect(Collectors.toList())
+            ResponseEntity.status(HttpStatus.OK).body(customerList)
+        } catch (e: Exception) {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyList())
+        }
 
     @DeleteMapping("/{id}")
     fun deleteCustomer(@PathVariable id: Long): ResponseEntity<String> {

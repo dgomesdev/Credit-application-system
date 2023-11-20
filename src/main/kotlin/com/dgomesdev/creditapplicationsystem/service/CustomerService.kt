@@ -14,6 +14,8 @@ interface CustomerService {
 
     fun deleteCustomer(customerId: Long)
 
+    fun findAllCustomers(): List<Customer>
+
     fun CustomerDto.toEntity(): Customer
 
     fun CustomerUpdateDto.toEntity(customer: Customer): Customer

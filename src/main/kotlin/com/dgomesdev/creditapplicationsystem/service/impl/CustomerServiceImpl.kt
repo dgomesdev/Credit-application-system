@@ -3,11 +3,9 @@ package com.dgomesdev.creditapplicationsystem.service.impl
 import com.dgomesdev.creditapplicationsystem.dto.CustomerDto
 import com.dgomesdev.creditapplicationsystem.dto.CustomerUpdateDto
 import com.dgomesdev.creditapplicationsystem.model.Address
-import com.dgomesdev.creditapplicationsystem.model.Credit
 import com.dgomesdev.creditapplicationsystem.model.Customer
 import com.dgomesdev.creditapplicationsystem.repository.CustomerRepository
 import com.dgomesdev.creditapplicationsystem.service.CustomerService
-import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Service
 
 @Service
@@ -35,6 +33,8 @@ class CustomerServiceImpl(
     override fun deleteCustomer(customerId: Long) {
         customerRepository.deleteById(customerId)
     }
+
+    override fun findAllCustomers(): List<Customer> = customerRepository.findAll()
 
     override fun CustomerDto.toEntity(): Customer =
         Customer(
