@@ -1,20 +1,29 @@
 package com.dgomesdev.creditapplicationsystem.service.impl
 
+import com.dgomesdev.creditapplicationsystem.dto.CustomerDto
+import com.dgomesdev.creditapplicationsystem.dto.CustomerUpdateDto
+import com.dgomesdev.creditapplicationsystem.model.Address
+import com.dgomesdev.creditapplicationsystem.model.Credit
 import com.dgomesdev.creditapplicationsystem.model.Customer
 import com.dgomesdev.creditapplicationsystem.repository.CustomerRepository
 import com.dgomesdev.creditapplicationsystem.service.CustomerService
+import org.springframework.beans.BeanUtils
 import org.springframework.stereotype.Service
 
 @Service
 class CustomerServiceImpl(
     private val customerRepository: CustomerRepository
 ): CustomerService {
-    override fun saveCustomer(customer: Customer) {
-        customerRepository.save(customer)
+    override fun saveCustomer(customerDto: CustomerDto) {
+        customerRepository.save(customerDto.toEntity())
     }
 
-    override fun updateCustomer(customerId: Long) {
-        TODO("Not yet implemented")
+    override fun updateCustomer(customerId: Long, customerUpdateDto: CustomerUpdateDto) {
+        val customer = customerRepository.findById(customerId).orElseThrow {
+            throw RuntimeException("Customer with id $customerId not found")
+        }
+        val updatedCustomer = customerUpdateDto.toEntity(customer)
+        customerRepository.save(updatedCustomer)
     }
 
     override fun findCustomerById(customerId: Long): Customer =
@@ -26,4 +35,24 @@ class CustomerServiceImpl(
     override fun deleteCustomer(customerId: Long) {
         customerRepository.deleteById(customerId)
     }
+
+    override fun CustomerDto.toEntity(): Customer =
+        Customer(
+            this.firstName,
+            this.lastName,
+            this.cpf,
+            this.income,
+            this.email,
+            this.password,
+            Address(this.zipCode, this.street),
+            credits = mutableListOf()
+        )
+
+    override fun CustomerUpdateDto.toEntity(customer: Customer): Customer =
+        customer.copy(
+            firstName = this.firstName,
+            lastName = this.lastName,
+            income = this.income,
+            address = Address(this.zipCode, this.street)
+        )
 }
