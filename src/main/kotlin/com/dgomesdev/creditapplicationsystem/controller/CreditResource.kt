@@ -4,6 +4,7 @@ import com.dgomesdev.creditapplicationsystem.dto.CreditDto
 import com.dgomesdev.creditapplicationsystem.dto.CreditListView
 import com.dgomesdev.creditapplicationsystem.dto.CreditView
 import com.dgomesdev.creditapplicationsystem.service.CreditService
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -16,7 +17,7 @@ class CreditResource(
 ) {
 
     @PostMapping
-    fun saveCredit(@RequestBody creditDto: CreditDto): ResponseEntity<String> {
+    fun saveCredit(@RequestBody @Valid creditDto: CreditDto): ResponseEntity<String> {
         return try {
             creditService.saveCredit(creditDto)
             ResponseEntity.status(HttpStatus.CREATED).body("Credit saved successfully!")
