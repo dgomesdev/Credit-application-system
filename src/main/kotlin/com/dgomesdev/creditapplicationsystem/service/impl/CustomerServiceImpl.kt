@@ -2,6 +2,7 @@ package com.dgomesdev.creditapplicationsystem.service.impl
 
 import com.dgomesdev.creditapplicationsystem.dto.CustomerDto
 import com.dgomesdev.creditapplicationsystem.dto.CustomerUpdateDto
+import com.dgomesdev.creditapplicationsystem.exception.BusinessException
 import com.dgomesdev.creditapplicationsystem.model.Address
 import com.dgomesdev.creditapplicationsystem.model.Customer
 import com.dgomesdev.creditapplicationsystem.repository.CustomerRepository
@@ -18,7 +19,7 @@ class CustomerServiceImpl(
 
     override fun updateCustomer(customerId: Long, customerUpdateDto: CustomerUpdateDto) {
         val customer = customerRepository.findById(customerId).orElseThrow {
-            throw RuntimeException("Customer with id $customerId not found")
+            throw BusinessException("Customer with id $customerId not found")
         }
         val updatedCustomer = customerUpdateDto.toEntity(customer)
         customerRepository.save(updatedCustomer)
@@ -26,12 +27,13 @@ class CustomerServiceImpl(
 
     override fun findCustomerById(customerId: Long): Customer =
         customerRepository.findById(customerId).orElseThrow{
-            throw RuntimeException("Id $customerId not found")
+            throw BusinessException("Customer with id $customerId not found")
         }
 
 
     override fun deleteCustomer(customerId: Long) {
-        customerRepository.deleteById(customerId)
+        val customer = this.findCustomerById(customerId)
+        customerRepository.delete(customer)
     }
 
     override fun findAllCustomers(): List<Customer> = customerRepository.findAll()

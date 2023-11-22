@@ -1,6 +1,7 @@
 package com.dgomesdev.creditapplicationsystem.service.impl
 
 import com.dgomesdev.creditapplicationsystem.dto.CreditDto
+import com.dgomesdev.creditapplicationsystem.exception.BusinessException
 import com.dgomesdev.creditapplicationsystem.model.Credit
 import com.dgomesdev.creditapplicationsystem.repository.CreditRepository
 import com.dgomesdev.creditapplicationsystem.service.CreditService
@@ -25,9 +26,9 @@ class CreditServiceImpl(
     override fun findCreditByCreditCode(customerId: Long, creditCode: UUID): Credit {
         val credit: Credit = (
                 creditRepository.findByCreditCode(creditCode) ?:
-                throw RuntimeException("Credit code not found")
+                throw BusinessException("Credit code not found")
                 )
-        return if (credit.customer?.id == customerId) credit else throw RuntimeException("Not authorized!")
+        return if (credit.customer?.id == customerId) credit else throw IllegalArgumentException("Not authorized!")
     }
 
     override fun CreditDto.toEntity(): Credit =

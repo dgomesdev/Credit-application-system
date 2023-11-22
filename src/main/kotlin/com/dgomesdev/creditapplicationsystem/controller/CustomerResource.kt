@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import java.util.stream.Collectors
 
@@ -27,62 +28,46 @@ class CustomerResource(
 
     @PostMapping
     fun saveCustomer(@RequestBody @Valid customerDto: CustomerDto): ResponseEntity<String> {
-        return try {
-            customerService.saveCustomer(customerDto)
-            ResponseEntity.status(HttpStatus.CREATED).body("Customer saved!")
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error when saving customer: ${e.message}")
-        }
+        customerService.saveCustomer(customerDto)
+        return ResponseEntity.status(HttpStatus.CREATED).body("Customer saved!")
     }
 
     @GetMapping("/{id}")
     fun findCustomerById(@PathVariable id: Long): ResponseEntity<String> {
-        return try {
-            val customer = CustomerView(customerService.findCustomerById(id))
-            ResponseEntity.status(HttpStatus.OK).body(
-                "Name: ${customer.firstName} ${customer.lastName} " +
-                "CPF: ${customer.cpf} " +
-                "Income: ${customer.income} " +
-                "E-mail: ${customer.email} " +
-                "Zip code: ${customer.zipCode} " +
-                "Street: ${customer.street}"
-            )
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found!")
-        }
+        val customer = CustomerView(customerService.findCustomerById(id))
+        return ResponseEntity.status(HttpStatus.OK).body(
+            "Name: ${customer.firstName} ${customer.lastName} " +
+                    "CPF: ${customer.cpf} " +
+                    "Income: ${customer.income} " +
+                    "E-mail: ${customer.email} " +
+                    "Zip code: ${customer.zipCode} " +
+                    "Street: ${customer.street}"
+        )
     }
 
     @GetMapping
-    fun findAllCustomers(): ResponseEntity<List<CustomerListView>> =
-        try {
-            val customerList = customerService
-                .findAllCustomers()
-                .stream()
-                .map { customer -> CustomerListView(customer) }
-                .collect(Collectors.toList())
-            ResponseEntity.status(HttpStatus.OK).body(customerList)
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(emptyList())
-        }
+    fun findAllCustomers(): ResponseEntity<List<CustomerListView>> {
+        val customerList = customerService
+            .findAllCustomers()
+            .stream()
+            .map { customer -> CustomerListView(customer) }
+            .collect(Collectors.toList())
+        return ResponseEntity.status(HttpStatus.OK).body(customerList)
+    }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteCustomer(@PathVariable id: Long): ResponseEntity<String> {
-        return try {
-            customerService.deleteCustomer(id)
-            ResponseEntity.status(HttpStatus.OK).body("Customer deleted successfully")
-        } catch (e:Exception) {
-            ResponseEntity.status(HttpStatus.NOT_FOUND).body("Customer not found!")
-        }
+        customerService.deleteCustomer(id)
+        return ResponseEntity.status(HttpStatus.OK).body("Customer deleted successfully")
     }
 
     @PatchMapping
-    fun updateCustomer(@RequestParam(value = "customerId") id: Long,
-                       @RequestBody @Valid customerUpdateDto: CustomerUpdateDto): ResponseEntity<String> {
-        return try {
-            customerService.updateCustomer(id, customerUpdateDto)
-            ResponseEntity.status(HttpStatus.OK).body("Customer updated successfully!")
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error when updating customer: ${e.message}")
-        }
+    fun updateCustomer(
+        @RequestParam(value = "customerId") id: Long,
+        @RequestBody @Valid customerUpdateDto: CustomerUpdateDto
+    ): ResponseEntity<String> {
+        customerService.updateCustomer(id, customerUpdateDto)
+        return ResponseEntity.status(HttpStatus.OK).body("Customer updated successfully!")
     }
 }
