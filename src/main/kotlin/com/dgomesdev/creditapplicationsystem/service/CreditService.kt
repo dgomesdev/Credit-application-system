@@ -11,6 +11,4 @@ interface CreditService {
     fun findAllCreditsByCustomerId(customerId: Long): List<Credit>
 
     fun findCreditByCreditCode(customerId: Long, creditCode: UUID): Credit
-
-    fun CreditDto.toEntity(): Credit
 }

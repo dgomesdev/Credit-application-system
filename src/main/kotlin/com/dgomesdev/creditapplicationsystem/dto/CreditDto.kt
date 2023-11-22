@@ -1,6 +1,7 @@
 package com.dgomesdev.creditapplicationsystem.dto
 
 import jakarta.validation.constraints.Future
+import jakarta.validation.constraints.Max
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
@@ -15,6 +16,7 @@ data class CreditDto(
     val dayOfFirstInstallment: LocalDate,
     @field:NotNull(message = "Number of installments is mandatory")
     @field:Min(value = 1, message = "Number of installments must be at least 1")
+    @field:Max(value = 48, message = "Number of installments cannot be bigger than 48")
     val numberOfInstallments: Int,
     @field:NotNull(message = "Customer Id is mandatory")
     val customerId: Long

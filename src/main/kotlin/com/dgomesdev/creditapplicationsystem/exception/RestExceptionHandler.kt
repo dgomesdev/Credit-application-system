@@ -22,7 +22,7 @@ class RestExceptionHandler {
         }
         return ResponseEntity(
             ExceptionDetails(
-                title = "Conflict of data! Consult the documentation",
+                title = "Bad request! Consult the documentation",
                 timeStamp = LocalDateTime.now(),
                 status = exception.statusCode.value(),
                 exception = exception.localizedMessage,
@@ -35,7 +35,7 @@ class RestExceptionHandler {
     fun handleDataAccessException(exception: DataAccessException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(
             ExceptionDetails(
-                title = "Bad request! Consult the documentation",
+                title = "Conflict of data! Consult the documentation",
                 timeStamp = LocalDateTime.now(),
                 status = HttpStatus.CONFLICT.value(),
                 exception = exception.localizedMessage,
@@ -48,7 +48,7 @@ class RestExceptionHandler {
     fun handleBusinessException(exception: BusinessException): ResponseEntity<ExceptionDetails> {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ExceptionDetails(
-                title = "Bad request! Consult the documentation",
+                title = "Error! Consult the documentation",
                 timeStamp = LocalDateTime.now(),
                 status = HttpStatus.BAD_REQUEST.value(),
                 exception = exception.localizedMessage,
