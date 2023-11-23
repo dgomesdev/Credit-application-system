@@ -33,7 +33,7 @@ class CustomerServiceImplTest {
     @Test
     fun addNewCustomer_saveCustomer() {
         //Given
-        val fakeCustomerDto: CustomerDto = buildCustomer()
+        val fakeCustomerDto: CustomerDto = buildCustomerDto()
         val fakeCustomer: Customer = fakeCustomerDto.toCustomer()
         every { customerRepository.save(any()) } returns fakeCustomer
 
@@ -50,8 +50,8 @@ class CustomerServiceImplTest {
     fun informId_updateCustomer() {
         //Given
         val fakeId: Long = Random.nextLong()
-        val fakeCustomer: Customer = buildCustomer().toCustomer().copy(id = fakeId)
-        val fakeCustomerUpdateDto = updateCustomer()
+        val fakeCustomer: Customer = buildCustomerDto().toCustomer().copy(id = fakeId)
+        val fakeCustomerUpdateDto = buildCustomerUpdateDto()
         val fakeUpdatedCustomer = fakeCustomerUpdateDto.toCustomer(fakeCustomer)
         every { customerRepository.findById(fakeId) } returns Optional.of(fakeCustomer)
         every { customerRepository.save(fakeUpdatedCustomer) } returns fakeUpdatedCustomer
@@ -70,7 +70,7 @@ class CustomerServiceImplTest {
     fun informId_findCustomerById_returnsCustomer() {
         //Given
         val fakeId: Long = Random.nextLong()
-        val fakeCustomer: Customer = buildCustomer().toCustomer().copy(id = fakeId)
+        val fakeCustomer: Customer = buildCustomerDto().toCustomer().copy(id = fakeId)
         every { customerRepository.findById(fakeId) } returns Optional.of(fakeCustomer)
 
         //When
@@ -101,7 +101,7 @@ class CustomerServiceImplTest {
     fun informId_deleteCustomer() {
         //Given
         val fakeId: Long = Random.nextLong()
-        val fakeCustomer: Customer = buildCustomer().toCustomer().copy(id = fakeId)
+        val fakeCustomer: Customer = buildCustomerDto().toCustomer().copy(id = fakeId)
         every { customerRepository.findById(fakeId) } returns Optional.of(fakeCustomer)
         every { customerRepository.delete(fakeCustomer) } just runs
         //When
@@ -116,7 +116,7 @@ class CustomerServiceImplTest {
     fun findAllCustomers_returnsListOfCustomers() {
         //Given
         val fakeId: Long = Random.nextLong()
-        val fakeCustomer: Customer = buildCustomer().toCustomer().copy(id = fakeId)
+        val fakeCustomer: Customer = buildCustomerDto().toCustomer().copy(id = fakeId)
         val fakeListOfCustomers: List<Customer> = listOf(fakeCustomer)
         every { customerRepository.findAll() } returns fakeListOfCustomers
 
@@ -128,7 +128,7 @@ class CustomerServiceImplTest {
         verify(exactly = 1) { customerRepository.findAll() }
     }
 
-    private fun buildCustomer() = CustomerDto(
+    private fun buildCustomerDto() = CustomerDto(
         firstName = "Pepito",
         lastName = "Gomes",
         cpf = "01297273265",
@@ -139,7 +139,7 @@ class CustomerServiceImplTest {
         street = "Rua do Pepito"
     )
 
-    private fun updateCustomer() = CustomerUpdateDto(
+    private fun buildCustomerUpdateDto() = CustomerUpdateDto(
         firstName = "Ursinho",
         lastName = "Dev",
         income = BigDecimal.valueOf(500),
