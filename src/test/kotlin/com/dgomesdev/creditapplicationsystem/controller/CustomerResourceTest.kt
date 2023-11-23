@@ -205,20 +205,20 @@ class CustomerResourceTest {
             .andDo(MockMvcResultHandlers.print())
     }
 
-    private fun buildCustomerDto(firstName: String = "Pepito") = CustomerDto(
+    private fun buildCustomerDto(firstName: String = "Dgomes") = CustomerDto(
         firstName = firstName,
-        lastName = "Gomes",
-        cpf = "01297273265",
+        lastName = "Dev",
+        cpf = "59113759078",
         income = BigDecimal.valueOf(1000),
-        email = "pepeito@pepito.com",
+        email = "dgomesdev@dgomesdev.com",
         password = "123",
         zipCode = "123",
         street = "Rua do Pepito"
     )
 
-    private fun buildCustomerUpdateDto(firstName: String = "Ursinho") = CustomerUpdateDto(
+    private fun buildCustomerUpdateDto(firstName: String = "Danilo") = CustomerUpdateDto(
         firstName = firstName,
-        lastName = "Dev",
+        lastName = "Gomes",
         income = BigDecimal.valueOf(500),
         zipCode = "123",
         street = "Rua do Pepito"

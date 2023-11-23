@@ -129,19 +129,19 @@ class CustomerServiceImplTest {
     }
 
     private fun buildCustomerDto() = CustomerDto(
-        firstName = "Pepito",
-        lastName = "Gomes",
-        cpf = "01297273265",
+        firstName = "Dgomes",
+        lastName = "Dev",
+        cpf = "59113759078",
         income = BigDecimal.valueOf(1000),
-        email = "pepeito@pepito.com",
+        email = "dgomesdev@dgomesdev.com",
         password = "123",
         zipCode = "123",
         street = "Rua do Pepito"
     )
 
     private fun buildCustomerUpdateDto() = CustomerUpdateDto(
-        firstName = "Ursinho",
-        lastName = "Dev",
+        firstName = "Danilo",
+        lastName = "Gomes",
         income = BigDecimal.valueOf(500),
         zipCode = "123",
         street = "Rua do Pepito"

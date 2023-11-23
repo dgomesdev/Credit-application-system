@@ -39,8 +39,10 @@ class CreditServiceImplTest {
         //Given
         val fakeCustomerId: Long = Random.nextLong()
         val fakeCustomer: Customer = buildCustomer().copy(id = fakeCustomerId)
-        val fakeCreditDto: CreditDto = buildCredit(fakeCustomerId)
-        val fakeCredit: Credit = fakeCreditDto.toCredit()
+
+        val fakeCreditCode = UUID.randomUUID()
+        val fakeCreditDto: CreditDto = buildCreditDto(fakeCustomerId)
+        val fakeCredit: Credit = buildCredit(fakeCreditCode, fakeCreditDto, fakeCustomer)
         every { customerService.findCustomerById(fakeCreditDto.customerId) } returns fakeCustomer
         every { creditRepository.save(any()) } returns fakeCredit
 
@@ -61,7 +63,7 @@ class CreditServiceImplTest {
         val fakeCustomerId: Long = Random.nextLong()
         val fakeCustomer: Customer = buildCustomer().copy(id = fakeCustomerId)
         val fakeCreditDto: CreditDto =
-            buildCredit(fakeCustomerId, dayOfFirstInstallment = LocalDate.now().plusMonths(4))
+            buildCreditDto(fakeCustomerId, dayOfFirstInstallment = LocalDate.now().plusMonths(4))
         every { customerService.findCustomerById(fakeCreditDto.customerId) } returns fakeCustomer
 
         //When
@@ -78,7 +80,7 @@ class CreditServiceImplTest {
         //Given
         val fakeCustomerId: Long = Random.nextLong()
         val fakeCustomer: Customer = buildCustomer().copy(id = fakeCustomerId)
-        val fakeCredit: Credit = buildCredit(fakeCustomerId).toCredit()
+        val fakeCredit: Credit = buildCreditDto(fakeCustomerId).toCredit()
         val fakeListOfCredits: List<Credit> = listOf(fakeCredit)
         every { customerService.findCustomerById(fakeCustomerId) } returns fakeCustomer
         every { creditRepository.findAllByCustomerId(fakeCustomerId) } returns fakeListOfCredits
@@ -97,7 +99,7 @@ class CreditServiceImplTest {
         val fakeCustomer: Customer = buildCustomer().copy(id = fakeCustomerId)
 
         val fakeCreditCode: UUID = UUID.randomUUID()
-        val fakeCredit: Credit = buildCredit(fakeCustomerId).toCredit().copy(creditCode = fakeCreditCode, customer = fakeCustomer)
+        val fakeCredit: Credit = buildCreditDto(fakeCustomerId).toCredit().copy(creditCode = fakeCreditCode, customer = fakeCustomer)
         every { customerService.findCustomerById(fakeCustomerId) } returns fakeCustomer
         every { creditRepository.findByCreditCode(fakeCreditCode) } returns fakeCredit
 
@@ -131,7 +133,7 @@ class CreditServiceImplTest {
         val fakeCustomer: Customer = buildCustomer().copy(id = fakeCustomerId)
 
         val fakeCreditCode: UUID = UUID.randomUUID()
-        val fakeCredit: Credit = buildCredit(Random.nextLong()).toCredit().copy(creditCode = fakeCreditCode)
+        val fakeCredit: Credit = buildCreditDto(Random.nextLong()).toCredit().copy(creditCode = fakeCreditCode)
         every { customerService.findCustomerById(fakeCustomerId) } returns fakeCustomer
         every { creditRepository.findByCreditCode(fakeCreditCode) } returns fakeCredit
 
@@ -144,11 +146,11 @@ class CreditServiceImplTest {
     }
 
     private fun buildCustomer() = Customer(
-        firstName = "Pepito",
-        lastName = "Gomes",
-        cpf = "01297273265",
+        firstName = "Dgomes",
+        lastName = "Dev",
+        cpf = "59113759078",
         income = BigDecimal.valueOf(1000),
-        email = "pepeito@pepito.com",
+        email = "dgomesdev@dgomesdev.com",
         password = "123",
         Address(
             zipCode = "123",
@@ -156,12 +158,20 @@ class CreditServiceImplTest {
         )
     )
 
-    private fun buildCredit(customerId: Long, dayOfFirstInstallment: LocalDate = LocalDate.now().plusDays(1)) =
+    private fun buildCreditDto(customerId: Long, dayOfFirstInstallment: LocalDate = LocalDate.now().plusDays(1)) =
         CreditDto(
             creditValue = BigDecimal.ONE,
             dayOfFirstInstallment = dayOfFirstInstallment,
             numberOfInstallments = 10,
             customerId = customerId
         )
+
+    private fun buildCredit(creditCode: UUID, creditDto: CreditDto, customer: Customer) = Credit(
+        creditCode = creditCode,
+        creditValue = creditDto.creditValue,
+        dayOfFirstInstallment = creditDto.dayOfFirstInstallment,
+        numberOfInstallments = creditDto.numberOfInstallments,
+        customer = customer
+    )
 
 }

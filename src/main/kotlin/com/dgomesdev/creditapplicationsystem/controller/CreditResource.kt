@@ -30,7 +30,6 @@ class CreditResource(
         //creditService.findAllCreditsByCustomerId(customerId).stream().map { credit -> CreditView(credit) }.collect(Collectors.toList())
     }
 
-
     @GetMapping("/{creditCode}")
     fun findCreditByCreditCode(
         @RequestParam(value = "customerId") customerId: Long,
@@ -45,6 +44,5 @@ class CreditResource(
                     "Customer's first name: ${credit.firstNameCustomer} \n" +
                     "Customer's last name: ${credit.lastNameCustomer} \n"
         )
-
     }
 }
