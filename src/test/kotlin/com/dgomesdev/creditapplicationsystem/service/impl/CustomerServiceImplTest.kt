@@ -1,6 +1,7 @@
 package com.dgomesdev.creditapplicationsystem.service.impl
 
 import com.dgomesdev.creditapplicationsystem.dto.CustomerDto
+import com.dgomesdev.creditapplicationsystem.dto.CustomerUpdateDto
 import com.dgomesdev.creditapplicationsystem.exception.BusinessException
 import com.dgomesdev.creditapplicationsystem.model.Customer
 import com.dgomesdev.creditapplicationsystem.model.mapper.toCustomer
@@ -32,19 +33,37 @@ class CustomerServiceImplTest {
     @Test
     fun addNewCustomer_saveCustomer() {
         //Given
-        val fakeCustomer: CustomerDto = buildCustomer()
-        every { customerRepository.save(any()) } returns fakeCustomer.toCustomer()
+        val fakeCustomerDto: CustomerDto = buildCustomer()
+        val fakeCustomer: Customer = fakeCustomerDto.toCustomer()
+        every { customerRepository.save(any()) } returns fakeCustomer
 
         //When
-        val actual = customerService.saveCustomer(fakeCustomer)
+        val actual = customerService.saveCustomer(fakeCustomerDto)
 
         //Then
         Assertions.assertThat(actual).isNotNull
-        verify(exactly = 1) { customerRepository.save(fakeCustomer.toCustomer()) }
+        Assertions.assertThat(actual).isSameAs(Unit)
+        verify(exactly = 1) { customerRepository.save(fakeCustomer) }
     }
 
     @Test
-    fun updateCustomer() {
+    fun informId_updateCustomer() {
+        //Given
+        val fakeId: Long = Random.nextLong()
+        val fakeCustomer: Customer = buildCustomer().toCustomer().copy(id = fakeId)
+        val fakeCustomerUpdateDto = updateCustomer()
+        val fakeUpdatedCustomer = fakeCustomerUpdateDto.toCustomer(fakeCustomer)
+        every { customerRepository.findById(fakeId) } returns Optional.of(fakeCustomer)
+        every { customerRepository.save(fakeUpdatedCustomer) } returns fakeUpdatedCustomer
+
+        //When
+        val actual = customerService.updateCustomer(fakeId, fakeCustomerUpdateDto)
+
+        //Then
+        Assertions.assertThat(actual).isNotNull
+        Assertions.assertThat(actual).isSameAs(Unit)
+        verify(exactly = 1) { customerRepository.findById(fakeId) }
+        verify(exactly = 1) { customerRepository.save(fakeUpdatedCustomer) }
     }
 
     @Test
@@ -94,16 +113,36 @@ class CustomerServiceImplTest {
     }
 
     @Test
-    fun findAllCustomers() {
+    fun findAllCustomers_returnsListOfCustomers() {
+        //Given
+        val fakeId: Long = Random.nextLong()
+        val fakeCustomer: Customer = buildCustomer().toCustomer().copy(id = fakeId)
+        val fakeListOfCustomers: List<Customer> = listOf(fakeCustomer)
+        every { customerRepository.findAll() } returns fakeListOfCustomers
+
+        //When
+        val actual: List<Customer> = customerService.findAllCustomers()
+
+        //Then
+        Assertions.assertThat(actual).isSameAs(fakeListOfCustomers)
+        verify(exactly = 1) { customerRepository.findAll() }
     }
 
     private fun buildCustomer() = CustomerDto(
         firstName = "Pepito",
-        lastName = "Dev",
+        lastName = "Gomes",
         cpf = "01297273265",
         income = BigDecimal.valueOf(1000),
         email = "pepeito@pepito.com",
         password = "123",
+        zipCode = "123",
+        street = "Rua do Pepito"
+    )
+
+    private fun updateCustomer() = CustomerUpdateDto(
+        firstName = "Ursinho",
+        lastName = "Dev",
+        income = BigDecimal.valueOf(500),
         zipCode = "123",
         street = "Rua do Pepito"
     )

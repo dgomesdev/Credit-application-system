@@ -3,10 +3,8 @@ package com.dgomesdev.creditapplicationsystem.service.impl
 import com.dgomesdev.creditapplicationsystem.dto.CustomerDto
 import com.dgomesdev.creditapplicationsystem.dto.CustomerUpdateDto
 import com.dgomesdev.creditapplicationsystem.exception.BusinessException
-import com.dgomesdev.creditapplicationsystem.model.Address
 import com.dgomesdev.creditapplicationsystem.model.Customer
 import com.dgomesdev.creditapplicationsystem.model.mapper.toCustomer
-import com.dgomesdev.creditapplicationsystem.model.mapper.toUpdatedCustomer
 import com.dgomesdev.creditapplicationsystem.repository.CustomerRepository
 import com.dgomesdev.creditapplicationsystem.service.CustomerService
 import org.springframework.stereotype.Service
@@ -21,7 +19,7 @@ class CustomerServiceImpl(
 
     override fun updateCustomer(customerId: Long, customerUpdateDto: CustomerUpdateDto) {
         val customer = this.findCustomerById(customerId)
-        val updatedCustomer = customerUpdateDto.toUpdatedCustomer(customer)
+        val updatedCustomer = customerUpdateDto.toCustomer(customer)
         customerRepository.save(updatedCustomer)
     }
 

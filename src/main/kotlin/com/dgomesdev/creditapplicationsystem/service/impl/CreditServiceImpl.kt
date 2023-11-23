@@ -19,7 +19,7 @@ class CreditServiceImpl(
         val customer = customerService.findCustomerById(creditDto.customerId)
         val credit = creditDto.toCredit().copy(customer = customer)
         if (credit.dayOfFirstInstallment.isAfter(LocalDate.now().plusMonths(3))) {
-            throw BusinessException("Day of first installment cannot be after 3 months")
+            throw BusinessException("Day of first installment cannot be later 3 months from today")
         } else creditRepository.save(credit)
     }
 

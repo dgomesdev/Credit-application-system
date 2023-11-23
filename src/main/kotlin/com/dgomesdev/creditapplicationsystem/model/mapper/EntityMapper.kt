@@ -18,7 +18,7 @@ fun CustomerDto.toCustomer(): Customer =
         Address(this.zipCode, this.street)
     )
 
-fun CustomerUpdateDto.toUpdatedCustomer(customer: Customer): Customer =
+fun CustomerUpdateDto.toCustomer(customer: Customer): Customer =
     customer.copy(
         firstName = this.firstName,
         lastName = this.lastName,
