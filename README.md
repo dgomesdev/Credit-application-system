@@ -3,7 +3,7 @@
 # Customer Controller
 
 ## Overview
-The Customer Application API provides endpoints to manage customer information, including creating, retrieving, updating, and deleting customer records.
+The Customer Resource API provides endpoints to manage customer information, including creating, retrieving, updating, and deleting customer records.
 
 ## Base URL
 All endpoints are relative to the base URL: `/api/customers`
@@ -101,7 +101,7 @@ All endpoints are relative to the base URL: `/api/customers`
  # Credit Controller
 
 ## Overview
-The Credit Application API provides endpoints to manage credit information, including creating and retrieving credit records associated with customers.
+The Credit Resource API provides endpoints to manage credit information, including creating and retrieving credit records associated with customers.
 
 ## Base URL
 All endpoints are relative to the base URL: `/api/credits`
