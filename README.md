@@ -1,5 +1,9 @@
 # Credit-application-system
 
+## Acknowledgments
+
+Special thanks to [Camila Cavalcante](https://github.com/cami-la) for the original API implementation. This API was developed based on her instructions during a [DIO](https://www.dio.me) bootcamp
+
 # Customer Controller
 
 ## Overview
